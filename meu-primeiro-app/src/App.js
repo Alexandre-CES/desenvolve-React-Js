@@ -1,33 +1,40 @@
-import React from "react"
+import React, {Component} from "react"
 
-const Professor = (props) => {
-  return(
-    <div>
-      <Geral nome={props.nome} especialidade={props.especialidade} idade={props.idade}/>
-      <Social urlFacebook={props.facebook} urlInstagram={props.instagram}/>
-      <hr/>
-    </div>
-  )
+class Professor extends Component{
+  render(){
+    return(
+      <div>
+        <Geral nome={this.props.nome} especialidade={this.props.especialidade} idade={this.props.idade}/>
+        <Social urlFacebook={this.props.facebook} urlInstagram={this.props.instagram}/>
+        <hr/>
+      </div>
+    );
+  };
 }
 
-const Geral = (props) => {
-  return(
-    <div>
-      <h2>{props.nome} | {props.especialidade} | {props.idade}</h2>
-    </div>
-  )
+class Geral extends Component{
+  render(){
+    return(
+      <div>
+        <h2>{this.props.nome} | {this.props.especialidade} | {this.props.idade}</h2>
+      </div>
+    );
+  };
 }
 
-const Social = (props) => {
-  return(
-    <div>
-      <a href={props.urlFacebook}>Facebook</a> - <a href={props.urlInstagram}>Instagram</a>
-    </div>
-  )
+class Social extends Component{
+  render(){
+    return(
+      <div>
+        <a href={this.props.urlFacebook}>Facebook</a> - <a href={this.props.urlInstagram}>Instagram</a>
+      </div>
+    );
+  };
 }
 
 function App(){
-  return(
+
+  return (
     <div>
       <h1>Conheça nossos professores</h1>
       <Professor nome='Lucas' especialidade='Front-end' idade='37' facebook='https://www.facebook.com' instagram='https://www.instagram.com'/>
