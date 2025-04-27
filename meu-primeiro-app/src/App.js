@@ -4,41 +4,27 @@ class App extends Component{
   constructor(props){
     super(props);
     this.state = {
-      nome: 'Lucas',
-      contador: 0
+      hora: '00:00:00'
     };
 
-    this.aumentar = this.aumentar.bind(this);
-    this.diminuir = this.diminuir.bind(this);
+    
   }
 
-  aumentar(){
-    let state = this.state;
-    state.contador += 1;
-    this.setState(state);
+  componentDidMount(){
+    setInterval(()=>{
+      this.setState({hora: new Date().toLocaleTimeString()})
+    }, 1000);
   }
 
-  diminuir(){
-    let state = this.state;
-
-    if(this.state.contador === 0){
-      alert('valor não pode ser menor que zero');
-      return
-    }else{
-      state.contador -= 1;
-      this.setState(state);
-    }
+  componentDidUpdate(){
+    console.log('Atualizou a hora');
   }
-
+  
   render(){
     return(
       <div>
-        <h1>Contador</h1>
-        <h3>
-          <button onClick={this.diminuir}>-</button>
-          {this.state.contador}
-          <button onClick={this.aumentar}>+</button>
-        </h3>
+        <h1>Ciclo de vida dos componentes</h1>
+        <h2>{this.state.hora}</h2>
       </div>
     )
   }
