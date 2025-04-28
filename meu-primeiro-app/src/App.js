@@ -4,63 +4,54 @@ class App extends Component{
   constructor(props){
     super(props);
     this.state = {
-      feed:[
-        {
-          id:1,
-          username:'Lucas',
-          likes:10, 
-          comments:3
-        },
-        {
-          id:2,
-          username:'Robson',
-          likes:25, 
-          comments:6
-        },
-        {
-          id:3,
-          username:'Douglas',
-          likes:52, 
-          comments:9
-        },
-        {
-          id:4,
-          username:'Pedro',
-          likes:1, 
-          comments:1
-        },
-      ]
+      email:'teste@gmail.com',
+      senha:'123456',
+      sexo:''
     };
+
+    this.changeEmail = this.changeEmail.bind(this);
+    this.changePassword = this.changePassword.bind(this);
+    this.changeSexo = this.changeSexo.bind(this);
+  }
+
+  changeEmail(e){
+    let valorDigitado = e.target.value;
+    this.setState({email:valorDigitado})
+  }
+
+  changePassword(e){
+    let valorDigitado = e.target.value;
+    this.setState({senha:valorDigitado})
+  }
+
+  changeSexo(e){
+    let valorDigitado = e.target.value;
+    this.setState({sexo:valorDigitado})
   }
 
   render(){
     return(
       <div>
-        {
-          this.state.feed.map((item)=>{
-            return(
-              <div key={item.id}>
-                <h3>{item.username}</h3>
-                <a>
-                  {
-                    item.likes > 1 ? 
-                    item.likes + ' curtidas' : 
-                    item.likes + ' curtida'
-                  }
-                </a> 
-                 \ 
-                <a>
-                  {
-                    item.comments > 1 ? 
-                    item.likes + ' comentários' :
-                    item.comments + ' comentário'
-                  }
-                </a>
-                <hr/>
-              </div>
-            );
-          })
-        }
+        <h1>Tela de login</h1>
+        <div>
+          <label>Email:</label>
+          <input type='email' name='email' value={this.state.email} onChange={this.changeEmail}/>
+        </div>
+        <div>
+          <label>Senha:</label>
+          <input type='password' name='senha' value={this.state.senha} onChange={this.changePassword}/>
+        </div>
+        <div>
+          <label>Sexo:</label>
+          <select value={this.state.sexo} onChange={this.changeSexo}>
+            <option value='m'>masculino</option>
+            <option value='f'>feminino</option>
+          </select>
+        </div>
+
+        <h2>{this.state.email}</h2>
+        <h2>{this.state.senha}</h2>
+        <h2>{this.state.sexo}</h2>
       </div>
     );
   }
