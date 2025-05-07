@@ -1,13 +1,26 @@
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 
 function App(){
 
-  const [tarefas,setTarefas] = useState([
-    'Fazer compras',
-    'Lavar Roupas'
-  ])
+  const [tarefas,setTarefas] = useState([])
 
   const [input,setInput] = useState('');
+
+  //component didMount
+  useEffect(()=>{
+    const tarefasStorage = localStorage.getItem('tarefas');
+
+    if(tarefasStorage){
+      setTarefas(JSON.parse(tarefasStorage));
+    }
+  },[])
+
+  //component didUpdate
+  useEffect(()=>{
+    if(tarefas.length != 0){
+      localStorage.setItem('tarefas',JSON.stringify(tarefas));
+    } 
+  }, [tarefas])
 
   function adicionar(){
     setTarefas([...tarefas,input]);
@@ -22,7 +35,7 @@ function App(){
       <ul>
         {
           tarefas.map((tarefa)=>{
-            return <li>{tarefa}</li>
+            return <li key={tarefa}>{tarefa}</li>
           })
         }
       </ul>
