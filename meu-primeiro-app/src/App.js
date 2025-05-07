@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useMemo, useCallback} from "react"
 
 function App(){
 
@@ -22,11 +22,13 @@ function App(){
     } 
   }, [tarefas])
 
-  function adicionar(){
+  const adicionar = useCallback(() =>{
     setTarefas([...tarefas,input]);
 
     setInput('');
-  }
+  }, [input,tarefas]);
+
+  const totalTarefas = useMemo(()=>tarefas.length, [tarefas])
 
   return(
     <div>
@@ -39,6 +41,8 @@ function App(){
           })
         }
       </ul>
+
+      <h2>Você tem {totalTarefas} tarefas pendentes</h2>
 
       <input type='text' value={input} onChange={(e)=>{setInput(e.target.value)}}></input>
       <button type='button' onClick={adicionar}>Adicionar</button>
