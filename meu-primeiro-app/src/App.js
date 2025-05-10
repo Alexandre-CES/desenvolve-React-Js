@@ -1,6 +1,10 @@
 import React, {useState, useEffect} from "react";
 import { db } from "./firebaseConnection";
-import { doc,setDoc,addDoc, getDocs, updateDoc, collection } from 'firebase/firestore';
+import { 
+  doc, collection,
+  addDoc, getDocs, updateDoc, deleteDoc 
+} from 'firebase/firestore';
+import './style.css';
 
 function App(){
 
@@ -22,16 +26,8 @@ function App(){
         console.log('Error: '+err);
     })
 
-    /*
-    await setDoc(doc(db, 'posts', '123'),{
-      titulo: titulo,
-      autor:autor
-    }).then(()=>{
-      console.log('Dados gravados com sucesso')
-    }).catch((err)=>{
-      console.log('Error: '+err)
-    })
-    */
+    buscarItem();
+    
   }
 
   async function buscarItem(){
@@ -71,6 +67,21 @@ function App(){
     }
   }
 
+  async function excluirItem(id){
+    const postRef = doc(db,'posts',id);
+
+    await deleteDoc(postRef).then(()=>{
+      console.log('Dados Deletados com sucesso!');
+      buscarItem();
+    }).catch((err)=>{
+      console.log('error: '+err);
+    })
+  }
+
+  useEffect(()=>{
+    buscarItem();
+  })
+
   return(
     <div>
       <h1>React + Firebase</h1>
@@ -99,6 +110,7 @@ function App(){
             <th>ID</th>
             <th>Título</th>
             <th>Autor</th>
+            <th></th>
           </tr>
           {
             posts.map((post)=>{
@@ -107,6 +119,9 @@ function App(){
                   <td>{post.id}</td>
                   <td>{post.titulo}</td>
                   <td>{post.autor}</td>
+                  <td>
+                    <button onClick={()=>excluirItem(post.id)}>Excluir</button>
+                  </td>
                 </tr>
               )
             })
