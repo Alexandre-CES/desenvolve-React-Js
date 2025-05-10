@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from "react";
 import { db } from "./firebaseConnection";
-import { doc,setDoc,addDoc, getDocs, collection } from 'firebase/firestore';
+import { doc,setDoc,addDoc, getDocs, updateDoc, collection } from 'firebase/firestore';
 
 function App(){
 
   const [titulo, setTitulo] = useState('');
   const [autor, setAutor] = useState('');
   const [posts, setPosts] = useState([]);
+  const [idPost, setIdPost] = useState('');
 
   async function cadastrarItem(){
 
@@ -51,9 +52,32 @@ function App(){
     })
   }
 
+  async function atualizarItem(){
+    if(idPost != ''){
+      const postRef = doc(db,'posts',idPost);
+
+      await updateDoc(postRef,{
+        titulo:titulo,
+        autor:autor
+      }).then(()=>{
+        console.log('Dados atualizados com sucesso!');
+        setTitulo('');
+        setAutor('');
+
+        buscarItem();
+      }).catch((err)=>{
+        console.log('error: '+err);
+      })
+    }
+  }
+
   return(
     <div>
       <h1>React + Firebase</h1>
+      <div>
+        <label>Título: </label><br/>
+        <textarea placeholder="ID" value={idPost} onChange={(e)=>setIdPost(e.target.value)}/>  
+      </div>
       <div>
         <label>Título: </label><br/>
         <textarea placeholder="Digite um título" value={titulo} onChange={(e)=>setTitulo(e.target.value)}/>  
@@ -64,6 +88,7 @@ function App(){
       </div>
       <div>
         <button onClick={cadastrarItem}>Cadastrar</button>
+        <button onClick={atualizarItem}>AtualizarPost</button>
         <button onClick={buscarItem}>Buscar</button>
       </div>
 
@@ -71,6 +96,7 @@ function App(){
         <h3>Listagem de Posts</h3>
         <table>
           <tr>
+            <th>ID</th>
             <th>Título</th>
             <th>Autor</th>
           </tr>
@@ -78,6 +104,7 @@ function App(){
             posts.map((post)=>{
               return(
                 <tr key={post.id}>
+                  <td>{post.id}</td>
                   <td>{post.titulo}</td>
                   <td>{post.autor}</td>
                 </tr>
