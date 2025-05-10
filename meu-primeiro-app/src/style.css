@@ -1,4 +1,11 @@
+main{
+    width: 800px;
+    margin: auto;
+    text-align: center;
+}
+
 table{
+    width: 100%;
     border-collapse: collapse;
 }
 

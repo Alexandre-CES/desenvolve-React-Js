@@ -83,10 +83,10 @@ function App(){
   })
 
   return(
-    <div>
+    <main>
       <h1>React + Firebase</h1>
       <div>
-        <label>Título: </label><br/>
+        <label>ID: </label><br/>
         <textarea placeholder="ID" value={idPost} onChange={(e)=>setIdPost(e.target.value)}/>  
       </div>
       <div>
@@ -100,18 +100,21 @@ function App(){
       <div>
         <button onClick={cadastrarItem}>Cadastrar</button>
         <button onClick={atualizarItem}>AtualizarPost</button>
-        <button onClick={buscarItem}>Buscar</button>
       </div>
 
-      <div>
+      <section>
         <h3>Listagem de Posts</h3>
         <table>
-          <tr>
-            <th>ID</th>
-            <th>Título</th>
-            <th>Autor</th>
-            <th></th>
-          </tr>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Autor</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
           {
             posts.map((post)=>{
               return(
@@ -122,13 +125,21 @@ function App(){
                   <td>
                     <button onClick={()=>excluirItem(post.id)}>Excluir</button>
                   </td>
+                  <td>
+                    <button onClick={()=>{
+                      setIdPost(post.id);
+                      setTitulo(post.titulo);
+                      setAutor(post.autor);
+                    }}>Editar</button>
+                  </td>
                 </tr>
               )
             })
           }
+          </tbody>
         </table>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
 
