@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from "react";
 import { db } from "./firebaseConnection";
-import { doc,setDoc,addDoc,collection } from 'firebase/firestore';
+import { doc,setDoc,addDoc, getDocs, collection } from 'firebase/firestore';
 
 function App(){
 
   const [titulo, setTitulo] = useState('');
   const [autor, setAutor] = useState('');
+  const [posts, setPosts] = useState([]);
 
   async function cadastrarItem(){
 
@@ -32,6 +33,24 @@ function App(){
     */
   }
 
+  async function buscarItem(){
+    const postRef = collection(db,'posts');
+
+    await getDocs(postRef).then((snapshot)=>{
+      let lista = [];
+
+      snapshot.forEach(doc=>{
+        lista.push({
+          id:doc.id,
+          titulo:doc.data().titulo,
+          autor:doc.data().autor
+        });
+      });
+
+      setPosts(lista);
+    })
+  }
+
   return(
     <div>
       <h1>React + Firebase</h1>
@@ -45,6 +64,27 @@ function App(){
       </div>
       <div>
         <button onClick={cadastrarItem}>Cadastrar</button>
+        <button onClick={buscarItem}>Buscar</button>
+      </div>
+
+      <div>
+        <h3>Listagem de Posts</h3>
+        <table>
+          <tr>
+            <th>Título</th>
+            <th>Autor</th>
+          </tr>
+          {
+            posts.map((post)=>{
+              return(
+                <tr key={post.id}>
+                  <td>{post.titulo}</td>
+                  <td>{post.autor}</td>
+                </tr>
+              )
+            })
+          }
+        </table>
       </div>
     </div>
   );
