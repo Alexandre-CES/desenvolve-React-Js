@@ -2,12 +2,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import * as Icon from 'react-bootstrap-icons';
 import React, {useState,useEffect,useMemo,useCallback} from 'react';
 
-import RoutesApp from './routes/routes';
-
-function App() {
+function Home() {
   return (
-    <RoutesApp/>
+    <div>
+      <h1>Página Home</h1>
+      <button type='button' class='btn btn-primary'>Teste</button>
+    </div>
   );
 }
 
-export default App;
+export default Home;

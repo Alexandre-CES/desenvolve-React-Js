@@ -2,12 +2,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import * as Icon from 'react-bootstrap-icons';
 import React, {useState,useEffect,useMemo,useCallback} from 'react';
 
-import RoutesApp from './routes/routes';
-
-function App() {
+function Register() {
   return (
-    <RoutesApp/>
+    <div>
+      <h1>Página Registro</h1>
+      
+    </div>
   );
 }
 
-export default App;
+export default Register;
