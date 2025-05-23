@@ -1,18 +1,51 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../firebaseConnection';
+import { auth, db } from '../../firebaseConnection';
 import * as Icon from 'react-bootstrap-icons';
+import { addDoc, collection } from 'firebase/firestore';
 
 function Admin() {
 
     const [taskInput,setTaskInput] = useState('');
+    const [user,setUser] = useState({});
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        async function loadTarefas(){
+            const userDetail = localStorage.getItem('@detailUser');
+            setUser(JSON.parse(userDetail));
+        }
+
+        loadTarefas();
+    },[]);
+
+    async function handleRegister(e){
+        e.preventDefault();
+
+        if(taskInput === ''){
+            alert('Digite uma tarefa');
+            return;
+        }else{
+            await addDoc(collection(db,'tarefas'), {
+                tarefa:taskInput,
+                created: new Date(),
+                userUid: user?.uid
+            }).then(()=>{
+                setTaskInput('');
+
+            }).catch((err)=>{
+                console.log('erro ao cadastrar: '+err);
+            })
+        }
+    }
 
     async function handleLogout(e){
         await signOut(auth);
     }
+
+    
 
     return (
         <div className='container mt-5'>
@@ -31,7 +64,7 @@ function Admin() {
                         <div className='input-group mb-3'>
                             <input type='text' id='taskinput' className='form-control' placeholder='Adicionar nova tarefa' 
                             value={taskInput} onChange={(e)=>setTaskInput(e.target.value)}/>
-                            <button className='btn btn-primary'>Adicionar</button>
+                            <button className='btn btn-primary' onClick={(e)=>handleRegister(e)}>Adicionar</button>
                         </div>
                         <ul className='list-group'>
                             <li className='list-group-item d-flex justify-content-between align-items-center'>
