@@ -4,18 +4,37 @@ import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../firebaseConnection';
 import * as Icon from 'react-bootstrap-icons';
-import { addDoc, collection } from 'firebase/firestore';
+import { doc, addDoc, deleteDoc, collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 
 function Admin() {
 
     const [taskInput,setTaskInput] = useState('');
     const [user,setUser] = useState({});
+    const [tarefas,setTarefas] = useState([]);
     const navigate = useNavigate();
 
     useEffect(()=>{
         async function loadTarefas(){
             const userDetail = localStorage.getItem('@detailUser');
             setUser(JSON.parse(userDetail));
+
+            if(userDetail){
+                const data = JSON.parse(userDetail);
+
+                const tarefaRef = collection(db, 'tarefas');
+                const q = query(tarefaRef, orderBy('created','desc'),where('userUid','==',data?.uid));
+                const unsub = onSnapshot(q,(snapshot)=>{
+                    let lista = [];
+                    snapshot.forEach((doc)=>{
+                        lista.push({
+                            id:doc.id,
+                            tarefa:doc.data().tarefa,
+                            userUid:doc.data().userUid
+                        });
+                    })
+                    setTarefas(lista);
+                });
+            }
         }
 
         loadTarefas();
@@ -41,6 +60,12 @@ function Admin() {
         }
     }
 
+    async function checkTask(id){
+        const docRef = doc(db,'tarefas',id);
+
+        await deleteDoc(docRef);
+    }
+
     async function handleLogout(e){
         await signOut(auth);
     }
@@ -62,22 +87,26 @@ function Admin() {
                     </div>
                     <div className='card-body'>
                         <div className='input-group mb-3'>
-                            <input type='text' id='taskinput' className='form-control' placeholder='Adicionar nova tarefa' 
-                            value={taskInput} onChange={(e)=>setTaskInput(e.target.value)}/>
+                            <input type='text' id='taskinput' className='form-control' placeholder='Adicionar nova tarefa' value={taskInput} onChange={(e)=>setTaskInput(e.target.value)}/>
                             <button className='btn btn-primary' onClick={(e)=>handleRegister(e)}>Adicionar</button>
                         </div>
                         <ul className='list-group'>
-                            <li className='list-group-item d-flex justify-content-between align-items-center'>
-                                Estudar JavaScript
-                                <div>
-                                    <button className='btn btn-warning btn-sm me-2'>
-                                        <Icon.PencilSquare/>
-                                    </button>
-                                    <button className='btn btn-success btn-sm me-2'>
-                                        <Icon.CheckSquare/>
-                                    </button>
-                                </div>
-                            </li>
+
+                            {tarefas.map((item)=>{
+                                return(
+                                    <li key={item.id} className='list-group-item d-flex justify-content-between align-items-center'>
+                                        {item.tarefa}
+                                        <div>
+                                            <button className='btn btn-warning btn-sm me-2'>
+                                                <Icon.PencilSquare/>
+                                            </button>
+                                            <button className='btn btn-success btn-sm me-2' onClick={()=>checkTask(item.id)}>
+                                                <Icon.CheckSquare/>
+                                            </button>
+                                        </div>
+                                    </li>
+                                )
+                            })}
                             
                         </ul>
                     </div>
