@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as Icon from 'react-bootstrap-icons';
-import React, {useState,useEffect,useMemo,useCallback} from 'react';
-import { Link, replace, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseConnection';
 
