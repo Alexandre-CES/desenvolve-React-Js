@@ -1,3 +1,3 @@
-Projeto Desenvolve - Bom Despacho
-React-Js
-PDBD030
+- Projeto Desenvolve - Bom Despacho
+- React-Js
+- PDBD030
